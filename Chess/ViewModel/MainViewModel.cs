@@ -60,7 +60,7 @@ namespace Chess.ViewModel
         
         private void DoSimpleCommand(object obj)
         {
-            PiecesPlacement.RemoveAt(0);
+            if(PiecesPlacement.Count > 0) PiecesPlacement.RemoveAt(0);
         }
 
         public void SquareSelect(Point P)

@@ -268,6 +268,7 @@
         
         <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="0" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
             <Label Content="Label"/>
+            <Button Content="Kill Piece" Command="{Binding TestCommand}" />
         </StackPanel>
         
     </Grid>
