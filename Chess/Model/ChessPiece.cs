@@ -1,11 +1,13 @@
-﻿using System.Windows;
+﻿using Chess.Model.Pieces;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace Chess.Model
 {
-    public class ChessPiece : RaisePropertyChangedBase
+    public class ChessPiece : RaisePropertyChangedBase, IPiece
     {
-        private Point pos;
-        public Point Pos
+        private Square pos;
+        public Square Pos
         {
             get => pos;
             set { pos = value; RaisePropertyChanged(); }
@@ -15,14 +17,19 @@ namespace Chess.Model
         public PieceType Type
         {
             get => type;
-            set { type = value; RaisePropertyChanged(); }
+            set { type = value; /*RaisePropertyChanged();*/ }
         }
 
         private Player player;
         public Player Player
         {
             get => player;
-            set { player = value; RaisePropertyChanged(); }
+            set { player = value; /*RaisePropertyChanged();*/ }
+        }
+
+        public IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

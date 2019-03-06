@@ -28,10 +28,12 @@ namespace Chess
             InitializeComponent();
         }
 
+        //public Point GetMousePos() => Mouse.GetPosition(ChessBoard);
+
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var vm = (MainViewModel)this.DataContext;
-            vm.SquareSelect(e.GetPosition(ChessBoard));
+            vm?.SquareSelect(e.GetPosition(ChessBoard));
         }
     }
 }

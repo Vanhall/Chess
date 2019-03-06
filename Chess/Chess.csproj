@@ -55,10 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Compile Include="Model\ChessPiece.cs" />
+    <Compile Include="Model\Pieces\Delta.cs" />
+    <Compile Include="Model\Pieces\IPiece.cs" />
+    <Compile Include="Model\Pieces\Pawn.cs" />
+    <Compile Include="Model\Pieces\PieceBase.cs" />
+    <Compile Include="Model\Pieces\Slider.cs" />
     <Compile Include="Model\PieceType.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\RaisePropertyChangedBase.cs" />
-    <Compile Include="Model\Sqare.cs" />
+    <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Page Include="MainWindow.xaml">
