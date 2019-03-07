@@ -36,12 +36,12 @@ namespace Chess.Model
 
         public static Square operator +(Square S, Delta D)
         {
-            return new Square(S.Rank + D.V, S.File + D.H);
+            return new Square(S.File + D.H, S.Rank + D.V);
         }
 
         public static Square operator +(Delta D, Square S)
         {
-            return new Square(S.Rank + D.V, S.File + D.H);
+            return new Square(S.File + D.H, S.Rank + D.V);
         }
 
         public bool IsOffBoard()

@@ -91,7 +91,7 @@
                     </ItemsControl>
 
                     <!-- Фигуры -->
-                    <ItemsControl Name="ChessBoard" ItemsSource="{Binding PiecesPlacement}">
+                    <ItemsControl Name="ChessBoard" ItemsSource="{Binding MyDict}">
                         <ItemsControl.Resources>
                             <Style x:Key="ChessPieceStyle" TargetType="{x:Type Image}">
                                 <Style.Triggers>

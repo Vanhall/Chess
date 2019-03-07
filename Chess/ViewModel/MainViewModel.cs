@@ -5,15 +5,19 @@ using System.Windows;
 using System.Windows.Input;
 using System.Linq;
 using Chess.Model.Pieces;
+using ReactiveUI;
+using DynamicData;
 
 namespace Chess.ViewModel
 {
-    public class MainViewModel
+    public class MainViewModel : ReactiveObject
     {
         public ObservableCollection<IPiece> PiecesPlacement { get; }
         public ObservableCollection<Square> LegalMoves { get; }
         public ICommand TestCommand { get; set; }
-        
+
+        public SourceCache<IPiece, Square> MyDict = new SourceCache<IPiece, Square>(k => k.Pos);
+
         public MainViewModel()
         {
             PiecesPlacement = new ObservableCollection<IPiece>
@@ -51,6 +55,8 @@ namespace Chess.ViewModel
                 new ChessPiece{Pos = new Square(6, 0), Type=PieceType.Knight, Player=Player.Black},
                 new ChessPiece{Pos = new Square(7, 0), Type=PieceType.Rook, Player=Player.Black}
             };
+
+            MyDict.AddOrUpdate(PiecesPlacement);
             LegalMoves = new ObservableCollection<Square>();
 
             TestCommand = new RelayCommand(DoSimpleCommand);

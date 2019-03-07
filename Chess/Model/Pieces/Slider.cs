@@ -29,7 +29,6 @@ namespace Chess.Model.Pieces
                 }
 
             }
-
             return LegalMoves;
         }
     }
