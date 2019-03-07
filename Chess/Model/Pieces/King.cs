@@ -16,10 +16,18 @@ namespace Chess.Model.Pieces
             };
         }
 
-        public override IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState)
+        public override IEnumerable<Square> GetPseudoLegalMoves(IEnumerable<IPiece> BoardState)
         {
-            //TODO
-            return new List<Square>();
+            var Moves = new List<Square>();
+            var S = Pos;
+
+            foreach (Delta D in Deltas)
+            {
+                var Obstacle = GetSquare(S + D, BoardState);
+                if ((Obstacle == null || Obstacle.Player != Player) && !(S + D).IsOffBoard())
+                    Moves.Add(S + D);
+            }
+            return Moves;
         }
     }
 }

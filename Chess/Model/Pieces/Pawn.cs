@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Chess.Model.Pieces
@@ -24,14 +25,30 @@ namespace Chess.Model.Pieces
             }
         }
 
-        public override IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState)
+        public override IEnumerable<Square> GetPseudoLegalMoves(IEnumerable<IPiece> BoardState)
         {
-            var LegalMoves = new List<Square>();
+            var Moves = new List<Square>();
             var D = Deltas[0];
             Square S = Pos + D;
-            LegalMoves.Add(S);
-            if (LongMove) LegalMoves.Add(S + D);
-            return LegalMoves;
+            var Obstacle = GetSquare(S, BoardState);
+            if (Obstacle == null)
+            {
+                Moves.Add(S);
+                if (LongMove)
+                {
+                    S += D;
+                    Obstacle = GetSquare(S, BoardState);
+                    if (Obstacle == null) Moves.Add(S);
+                }
+            }
+
+            S = Pos;
+            foreach (Delta A in Attacks)
+            {
+                Obstacle = GetSquare(S + A, BoardState);
+                if (Obstacle != null && Obstacle.Player != Player) Moves.Add(S + A);
+            }
+            return Moves;
         }
     }
 }

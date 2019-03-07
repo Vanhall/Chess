@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ReactiveUI;
 
 namespace Chess.Model.Pieces
@@ -24,6 +25,10 @@ namespace Chess.Model.Pieces
             this.Player = Player;
         }
 
-        public abstract IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState);
+        public abstract IEnumerable<Square> GetPseudoLegalMoves(IEnumerable<IPiece> BoardState);
+
+        protected IPiece GetSquare(Square Sq, IEnumerable<IPiece> Board) => (from P in Board
+                                                                           where P.Pos.Equals(Sq)
+                                                                           select P).SingleOrDefault();
     }
 }

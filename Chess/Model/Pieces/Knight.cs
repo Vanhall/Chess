@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Chess.Model.Pieces
 {
@@ -17,20 +16,18 @@ namespace Chess.Model.Pieces
             };
         }
 
-        public override IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState)
+        public override IEnumerable<Square> GetPseudoLegalMoves(IEnumerable<IPiece> BoardState)
         {
-            var LegalMoves = new List<Square>();
+            var Moves = new List<Square>();
             var S = Pos;
 
             foreach (Delta D in Deltas)
             {
-                var Obstacle = (from P in BoardState
-                                where P.Pos.Equals(S + D)
-                                select P).SingleOrDefault();
+                var Obstacle = GetSquare(S + D, BoardState);
                 if ((Obstacle == null || Obstacle.Player != Player) && !(S + D).IsOffBoard())
-                    LegalMoves.Add(S + D);
+                    Moves.Add(S + D);
             }
-            return LegalMoves;
+            return Moves;
         }
     }
 }

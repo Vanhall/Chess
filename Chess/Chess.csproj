@@ -94,7 +94,6 @@
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\RelayCommand.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
