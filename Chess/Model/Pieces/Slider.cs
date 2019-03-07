@@ -5,7 +5,7 @@ namespace Chess.Model.Pieces
 {
     public class Slider : PieceBase
     {
-        public Slider(Square Position) : base(Position) { }
+        public Slider(Square Position, Player Player) : base(Position, Player) { }
 
         public override IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState)
         {
@@ -17,15 +17,11 @@ namespace Chess.Model.Pieces
                 while (!(CurrentSqaure+=D).IsOffBoard() && Obstacle == null)
                 {
                     Obstacle = (from P in BoardState
-                                where P.Pos == CurrentSqaure //!!! TODO: Square.Equals !!!!
+                                where P.Pos.Equals(CurrentSqaure)
                                 select P).SingleOrDefault();
 
-                    if (Obstacle != null)
-                    {
-                        if (Obstacle.Player != Player)
-                            LegalMoves.Add(CurrentSqaure);
-                    }
-                    else LegalMoves.Add(CurrentSqaure);
+                    if ((Obstacle == null || Obstacle.Player != Player) && !CurrentSqaure.IsOffBoard())
+                        LegalMoves.Add(CurrentSqaure);
                 }
 
             }

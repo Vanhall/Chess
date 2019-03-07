@@ -53,7 +53,7 @@
                 <Canvas Width="8" Height="8" MouseDown="Canvas_MouseDown" Background="{StaticResource CheckerPattern}">
 
                     <!-- Подсветка доступных ходов -->
-                    <ItemsControl ItemsSource="{Binding LegalMoves}">
+                    <ItemsControl ItemsSource="{Binding CurrentPieceMoves}">
                         <ItemsControl.Resources>
                             <DrawingBrush x:Key="GreenHighlight"
                                       Stretch="None"
@@ -91,7 +91,7 @@
                     </ItemsControl>
 
                     <!-- Фигуры -->
-                    <ItemsControl Name="ChessBoard" ItemsSource="{Binding MyDict}">
+                    <ItemsControl Name="ChessBoard" ItemsSource="{Binding Board}">
                         <ItemsControl.Resources>
                             <Style x:Key="ChessPieceStyle" TargetType="{x:Type Image}">
                                 <Style.Triggers>

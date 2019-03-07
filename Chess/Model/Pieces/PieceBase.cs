@@ -1,25 +1,27 @@
 ﻿using System.Collections.Generic;
+using ReactiveUI;
 
 namespace Chess.Model.Pieces
 {
-    public abstract class PieceBase : RaisePropertyChangedBase, IPiece
+    public abstract class PieceBase : ReactiveObject, IPiece
     {
         private Square pos;
         public Square Pos
         {
             get => pos;
-            set { pos = value; RaisePropertyChanged(); }
+            set => this.RaiseAndSetIfChanged(ref pos, value);
         }
 
         public PieceType Type { get; protected set; }
 
         public Player Player { get; protected set; }
 
-        protected IEnumerable<Delta> Deltas { get;  set; }
+        protected Delta[] Deltas { get;  set; }
 
-        public PieceBase(Square Position)
+        public PieceBase(Square Position, Player Player)
         {
             pos = Position;
+            this.Player = Player;
         }
 
         public abstract IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState);

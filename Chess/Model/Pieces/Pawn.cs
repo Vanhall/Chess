@@ -7,9 +7,8 @@ namespace Chess.Model.Pieces
     {
         private Delta[] Attacks;
         private bool LongMove = false;
-        public Pawn(Square Position, Player Player) : base(Position)
+        public Pawn(Square Position, Player Player) : base(Position, Player)
         {
-            this.Player = Player;
             Type = PieceType.Pawn;
             if (Player == Player.White)
             {
@@ -28,7 +27,7 @@ namespace Chess.Model.Pieces
         public override IEnumerable<Square> GetLegalMoves(IEnumerable<IPiece> BoardState)
         {
             var LegalMoves = new List<Square>();
-            var D = Deltas.First();
+            var D = Deltas[0];
             Square S = Pos + D;
             LegalMoves.Add(S);
             if (LongMove) LegalMoves.Add(S + D);
