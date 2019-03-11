@@ -11,36 +11,26 @@ namespace Chess.ViewModel
 {
     public class MainViewModel : ReactiveObject
     {
-        //private SourceList<Square> selectedPieceMoves;
-        public IObservableCollection<Square> SelectedPieceMoves { get; }
-        
         public Board Board { get; }
-
-        public ReactiveCommand<Square, Unit> ProcessSquareClick { get; set; }
-
         public Player Turn { get; set; }
 
         private Square SelectedPiecePos { get; set; }
+        public IObservableCollection<Square> SelectedPieceMoves { get; }
+
+        public ReactiveCommand<Square, Unit> ProcessSquareClick { get; set; }
 
         private Dictionary<Square, List<Square>> LegalMoves;
-
         private MoveGenerator MoveGen;
 
         public MainViewModel()
         {
             Board = new Board();
-
-            //selectedPieceMoves = new SourceList<Square>();
             SelectedPieceMoves = new ObservableCollectionExtended<Square>();
-            //selectedPieceMoves.Connect().Bind(SelectedPieceMoves).Subscribe();
-            
             ProcessSquareClick = ReactiveCommand.Create<Square>(x => ProcessClick(x));
+            MoveGen = new MoveGenerator();
 
             Turn = Player.White;
             SelectedPiecePos = null;
-
-            // TODO: Generate initial Moves here
-            MoveGen = new MoveGenerator();
             LegalMoves = MoveGen.GenerateMoves(Board, Turn);
         }
         
@@ -49,34 +39,18 @@ namespace Chess.ViewModel
             var ClickedPiece = Board.GetPiece(S);
             
             if (SelectedPiecePos == null)
-            {
                 if (ClickedPiece != null && ClickedPiece.Player == Turn)
-                {
                     SelectPiece(S);
-                }
                 else
-                {
                     DeselectPiece();
-                }
-            }
             else
-            {
                 if (LegalMoves[SelectedPiecePos].Contains(S))
-                {
                     MakeMove(SelectedPiecePos, S);
-                }
                 else
-                {
                     if (ClickedPiece != null && ClickedPiece.Player == Turn)
-                    {
                         SelectPiece(S);
-                    }
                     else
-                    {
                         DeselectPiece();
-                    }
-                }
-            }
         }
 
         private void SelectPiece(Square S)

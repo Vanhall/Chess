@@ -53,7 +53,7 @@ namespace Chess.Model
             pieces.Connect().Bind(Pieces).Subscribe();
         }
 
-        public IPiece GetPiece(Square S) => pieces.Items.FirstOrDefault(p => p.Pos.Equals(S));
+        public IPiece GetPiece(Square S) => pieces.Items.SingleOrDefault(p => p.Pos.Equals(S));
 
         public void KillPiece(Square S) { pieces.Remove(S); }
 
