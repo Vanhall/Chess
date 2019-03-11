@@ -25,19 +25,19 @@ namespace Chess.Model.Pieces
             }
         }
 
-        public override IEnumerable<Square> GetPseudoLegalMoves(IEnumerable<IPiece> BoardState)
+        public override IEnumerable<Square> GetPseudoLegalMoves(Board BoardState)
         {
             var Moves = new List<Square>();
             var D = Deltas[0];
             Square S = Pos + D;
-            var Obstacle = GetSquare(S, BoardState);
+            var Obstacle = BoardState.GetPiece(S);
             if (Obstacle == null)
             {
                 Moves.Add(S);
                 if (LongMove)
                 {
                     S += D;
-                    Obstacle = GetSquare(S, BoardState);
+                    Obstacle = BoardState.GetPiece(S);
                     if (Obstacle == null) Moves.Add(S);
                 }
             }
@@ -45,7 +45,7 @@ namespace Chess.Model.Pieces
             S = Pos;
             foreach (Delta A in Attacks)
             {
-                Obstacle = GetSquare(S + A, BoardState);
+                Obstacle = BoardState.GetPiece(S + A);
                 if (Obstacle != null && Obstacle.Player != Player) Moves.Add(S + A);
             }
             return Moves;

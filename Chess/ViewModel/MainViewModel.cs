@@ -1,10 +1,9 @@
 ﻿using Chess.Model;
-using Chess.Model.Pieces;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Windows;
 
@@ -12,83 +11,97 @@ namespace Chess.ViewModel
 {
     public class MainViewModel : ReactiveObject
     {
-        private SourceList<Square> currentPieceMoves;
-        public IObservableCollection<Square> CurrentPieceMoves { get; }
-
-        private SourceCache<IPiece, Square> board;
-        public IObservableCollection<IPiece> Board { get; }
+        //private SourceList<Square> selectedPieceMoves;
+        public IObservableCollection<Square> SelectedPieceMoves { get; }
+        
+        public Board Board { get; }
 
         public ReactiveCommand<Square, Unit> ProcessSquareClick { get; set; }
 
+        public Player Turn { get; set; }
+
+        private Square SelectedPiecePos { get; set; }
+
+        private Dictionary<Square, List<Square>> LegalMoves;
+
+        private MoveGenerator MoveGen;
+
         public MainViewModel()
         {
-            board = new SourceCache<IPiece, Square>(k => k.Pos);
-            board.AddOrUpdate(new IPiece[] {
-                new Pawn(new Square(0, 6), Player.White),
-                new Pawn(new Square(1, 6), Player.White),
-                new Pawn(new Square(2, 6), Player.White),
-                new Pawn(new Square(3, 6), Player.White),
-                new Pawn(new Square(4, 6), Player.White),
-                new Pawn(new Square(5, 6), Player.White),
-                new Pawn(new Square(6, 6), Player.White),
-                new Pawn(new Square(7, 6), Player.White),
-                new Rook(new Square(0, 7), Player.White),
-                new Knight(new Square(1, 7), Player.White),
-                new Bishop(new Square(2, 7), Player.White),
-                new Queen(new Square(3, 7), Player.White),
-                new King(new Square(4, 7), Player.White),
-                new Bishop(new Square(5, 7), Player.White),
-                new Knight(new Square(6, 7), Player.White),
-                new Rook(new Square(7, 7), Player.White),
-                new Pawn(new Square(0, 1), Player.Black),
-                new Pawn(new Square(1, 1), Player.Black),
-                new Pawn(new Square(2, 1), Player.Black),
-                new Pawn(new Square(3, 1), Player.Black),
-                new Pawn(new Square(4, 1), Player.Black),
-                new Pawn(new Square(5, 1), Player.Black),
-                new Pawn(new Square(6, 1), Player.Black),
-                new Pawn(new Square(7, 1), Player.Black),
-                new Rook(new Square(0, 0), Player.Black),
-                new Knight(new Square(1, 0), Player.Black),
-                new Bishop(new Square(2, 0), Player.Black),
-                new Queen(new Square(3, 0), Player.Black),
-                new King(new Square(4, 0), Player.Black),
-                new Bishop(new Square(5, 0), Player.Black),
-                new Knight(new Square(6, 0), Player.Black),
-                new Rook(new Square(7, 0), Player.Black),
-                //test pieces
-                new Knight(new Square(1, 2), Player.White),
-                new Bishop(new Square(5, 4), Player.Black),
-                new Rook(new Square(2, 4), Player.Black),
-                new Queen(new Square(7, 3), Player.White),
-                new King(new Square(2, 3), Player.Black),
-                });
-            Board = new ObservableCollectionExtended<IPiece>();
-            board.Connect().Bind(Board).Subscribe();
+            Board = new Board();
 
-            currentPieceMoves = new SourceList<Square>();
-            CurrentPieceMoves = new ObservableCollectionExtended<Square>();
-            currentPieceMoves.Connect().Bind(CurrentPieceMoves).Subscribe();
+            //selectedPieceMoves = new SourceList<Square>();
+            SelectedPieceMoves = new ObservableCollectionExtended<Square>();
+            //selectedPieceMoves.Connect().Bind(SelectedPieceMoves).Subscribe();
             
-            ProcessSquareClick = ReactiveCommand.Create<Square>(x => DoSimpleCommand(x));
+            ProcessSquareClick = ReactiveCommand.Create<Square>(x => ProcessClick(x));
+
+            Turn = Player.White;
+            SelectedPiecePos = null;
+
+            // TODO: Generate initial Moves here
+            MoveGen = new MoveGenerator();
+            LegalMoves = MoveGen.GenerateMoves(Board, Turn);
         }
         
-        private void DoSimpleCommand(object obj)
+        private void ProcessClick(Square S)
         {
-            if (obj is Square S)
+            var ClickedPiece = Board.GetPiece(S);
+            
+            if (SelectedPiecePos == null)
             {
-                var kek = board.Items.SingleOrDefault(x => x.Pos.Equals(S));
-
-                if (kek != null)
+                if (ClickedPiece != null && ClickedPiece.Player == Turn)
                 {
-                    currentPieceMoves.Clear();
-                    currentPieceMoves.AddRange(kek.GetPseudoLegalMoves(Board.ToArray()));
+                    SelectPiece(S);
+                }
+                else
+                {
+                    DeselectPiece();
                 }
             }
-            //if (board.Count > 0) board.Remove(new Square(4, 6));
+            else
+            {
+                if (LegalMoves[SelectedPiecePos].Contains(S))
+                {
+                    MakeMove(SelectedPiecePos, S);
+                }
+                else
+                {
+                    if (ClickedPiece != null && ClickedPiece.Player == Turn)
+                    {
+                        SelectPiece(S);
+                    }
+                    else
+                    {
+                        DeselectPiece();
+                    }
+                }
+            }
         }
 
-        public void SquareSelect(Point P)
+        private void SelectPiece(Square S)
+        {
+            SelectedPiecePos = S;
+            SelectedPieceMoves.Clear();
+            SelectedPieceMoves.Add(SelectedPiecePos);
+            SelectedPieceMoves.AddRange(LegalMoves[SelectedPiecePos]);
+        }
+
+        private void DeselectPiece()
+        {
+            SelectedPiecePos = null;
+            SelectedPieceMoves.Clear();
+        }
+
+        private void MakeMove(Square From, Square To)
+        {
+            Board.MovePiece(From, To);
+            DeselectPiece();
+            Turn = (Turn == Player.White) ? Player.Black : Player.White;
+            LegalMoves = MoveGen.GenerateMoves(Board, Turn);
+        }
+
+        public void Square_clicked(Point P)
         {
             int Rank = (int)Math.Floor(P.Y);
             int File = (int)Math.Floor(P.X);

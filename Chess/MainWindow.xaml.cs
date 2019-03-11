@@ -20,7 +20,7 @@ namespace Chess
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var vm = (MainViewModel)this.DataContext;
-            vm?.SquareSelect(e.GetPosition(ChessBoard));
+            vm?.Square_clicked(e.GetPosition(ChessBoard));
         }
     }
 }

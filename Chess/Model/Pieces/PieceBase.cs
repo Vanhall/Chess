@@ -17,7 +17,7 @@ namespace Chess.Model.Pieces
 
         public Player Player { get; protected set; }
 
-        protected Delta[] Deltas { get;  set; }
+        public Delta[] Deltas { get; protected set; }
 
         public PieceBase(Square Position, Player Player)
         {
@@ -25,10 +25,6 @@ namespace Chess.Model.Pieces
             this.Player = Player;
         }
 
-        public abstract IEnumerable<Square> GetPseudoLegalMoves(IEnumerable<IPiece> BoardState);
-
-        protected IPiece GetSquare(Square Sq, IEnumerable<IPiece> Board) => (from P in Board
-                                                                           where P.Pos.Equals(Sq)
-                                                                           select P).SingleOrDefault();
+        public abstract IEnumerable<Square> GetPseudoLegalMoves(Board BoardState);
     }
 }

@@ -53,7 +53,7 @@
                 <Canvas Width="8" Height="8" MouseDown="Canvas_MouseDown" Background="{StaticResource CheckerPattern}">
 
                     <!-- Подсветка доступных ходов -->
-                    <ItemsControl ItemsSource="{Binding CurrentPieceMoves}">
+                    <ItemsControl ItemsSource="{Binding SelectedPieceMoves}">
                         <ItemsControl.Resources>
                             <DrawingBrush x:Key="GreenHighlight"
                                       Stretch="None"
@@ -91,7 +91,7 @@
                     </ItemsControl>
 
                     <!-- Фигуры -->
-                    <ItemsControl Name="ChessBoard" ItemsSource="{Binding Board}">
+                    <ItemsControl Name="ChessBoard" ItemsSource="{Binding Board.Pieces}">
                         <ItemsControl.Resources>
                             <Style x:Key="ChessPieceStyle" TargetType="{x:Type Image}">
                                 <Style.Triggers>
@@ -268,7 +268,6 @@
         
         <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="0" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
             <Label Content="Label"/>
-            <Button Content="Kill Piece" Command="{Binding TestCommand}" />
         </StackPanel>
         
     </Grid>

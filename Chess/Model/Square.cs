@@ -35,6 +35,12 @@ namespace Chess.Model
             Rank = Horizontal;
         }
 
+        public Square(Square S)
+        {
+            File = S.File;
+            Rank = S.Rank;
+        }
+
         public static Square operator +(Square S, Delta D)
         {
             return new Square(S.File + D.H, S.Rank + D.V);
