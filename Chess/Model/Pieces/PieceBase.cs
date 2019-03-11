@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ReactiveUI;
+﻿using ReactiveUI;
+using System.Collections.Generic;
 
 namespace Chess.Model.Pieces
 {

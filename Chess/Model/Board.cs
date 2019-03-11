@@ -1,5 +1,4 @@
-﻿//using Chess.Model;
-using Chess.Model.Pieces;
+﻿using Chess.Model.Pieces;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
