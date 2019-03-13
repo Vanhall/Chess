@@ -5,6 +5,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Windows;
 
 namespace Chess.ViewModel
@@ -37,40 +38,30 @@ namespace Chess.ViewModel
         private void ProcessClick(Square S)
         {
             var ClickedPiece = Board.GetPiece(S);
-            
-            if (SelectedPiecePos == null)
-                if (ClickedPiece != null && ClickedPiece.Player == Turn)
-                    SelectPiece(S);
-                else
-                    DeselectPiece();
+
+            if (SelectedPiecePos != null && LegalMoves[SelectedPiecePos].Contains(S))
+                MakeMove(SelectedPiecePos, S);
+            else if (ClickedPiece != null && ClickedPiece.Player == Turn)
+                SelectPiece(S);
             else
-                if (LegalMoves[SelectedPiecePos].Contains(S))
-                    MakeMove(SelectedPiecePos, S);
-                else
-                    if (ClickedPiece != null && ClickedPiece.Player == Turn)
-                        SelectPiece(S);
-                    else
-                        DeselectPiece();
+                SelectPiece(null);
         }
 
         private void SelectPiece(Square S)
         {
             SelectedPiecePos = S;
             SelectedPieceMoves.Clear();
-            SelectedPieceMoves.Add(SelectedPiecePos);
-            SelectedPieceMoves.AddRange(LegalMoves[SelectedPiecePos]);
+            if (SelectedPiecePos != null)
+            {
+                SelectedPieceMoves.Add(SelectedPiecePos);
+                SelectedPieceMoves.AddRange(LegalMoves[SelectedPiecePos]);
+            }
         }
-
-        private void DeselectPiece()
-        {
-            SelectedPiecePos = null;
-            SelectedPieceMoves.Clear();
-        }
-
+        
         private void MakeMove(Square From, Square To)
         {
             Board.MovePiece(From, To);
-            DeselectPiece();
+            SelectPiece(null);
             Turn = (Turn == Player.White) ? Player.Black : Player.White;
             LegalMoves = MoveGen.GenerateMoves(Board, Turn);
         }

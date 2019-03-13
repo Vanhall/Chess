@@ -13,9 +13,9 @@
             <StatusBar DockPanel.Dock="Bottom">
                 <TextBlock Text="Test" />
             </StatusBar>
-            <Grid Height="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}"
-              MaxHeight="{Binding ElementName=LayoutRoot, Path=ActualHeight}"
-              MaxWidth="{Binding Path=MaxHeight, RelativeSource={RelativeSource Self}}">
+            <Grid Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+              MaxHeight="{Binding Path=MaxWidth, RelativeSource={RelativeSource Self}}"
+              MaxWidth="{Binding ElementName=LayoutRoot, Path=ActualWidth}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
@@ -234,6 +234,8 @@
                         <Style x:Key="FileLabels" TargetType="Label">
                             <Setter Property="VerticalAlignment" Value="Top"/>
                             <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="FontFamily" Value="Lucida Calligraphy" />
+                            <Setter Property="FontSize" Value="14" />
                         </Style>
                     </UniformGrid.Resources>
                     <Label Content="a" Style="{StaticResource FileLabels}" />
@@ -252,6 +254,8 @@
                         <Style x:Key="RankLabels" TargetType="Label">
                             <Setter Property="VerticalAlignment" Value="Center" />
                             <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="FontFamily" Value="Lucida Calligraphy" />
+                            <Setter Property="FontSize" Value="14" />
                         </Style>
                     </UniformGrid.Resources>
                     <Label Content="8" Style="{StaticResource RankLabels}"/>

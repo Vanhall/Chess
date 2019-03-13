@@ -1,26 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using ReactiveUI;
+using System.Collections.Generic;
+using System.Reactive.Linq;
 
 namespace Chess.Model.Pieces
 {
     public class Pawn : PieceBase
     {
-        private Delta[] Attacks;
-        private bool LongMove = false;
+        private Delta[] attacks;
+
+        private ObservableAsPropertyHelper<bool> longMove;
+        private bool LongMove => longMove.Value;
+
         public Pawn(Square Position, Player Player) : base(Position, Player)
         {
             Type = PieceType.Pawn;
             if (Player == Player.White)
             {
                 Deltas = new Delta[] { new Delta(-1, 0) };
-                Attacks = new Delta[] { new Delta(-1,-1), new Delta(-1, 1)};
-                if (Pos.Rank == 6) LongMove = true;
+                attacks = new Delta[] { new Delta(-1,-1), new Delta(-1, 1)};
             }
             else
             {
                 Deltas = new Delta[] { new Delta(1, 0) };
-                Attacks = new Delta[] { new Delta(1, -1), new Delta(1, 1) };
-                if (Pos.Rank == 1) LongMove = true;
+                attacks = new Delta[] { new Delta(1, -1), new Delta(1, 1) };
             }
+            longMove = this.WhenAny(x => x.Pos, _ => new bool())
+                .Select(x => Pos.Rank == 6 && Player == Player.White || Pos.Rank == 1 && Player == Player.Black)
+                .ToProperty(this, x => x.LongMove);
         }
 
         public override IEnumerable<Square> GetPseudoLegalMoves(Board BoardState)
@@ -41,7 +47,7 @@ namespace Chess.Model.Pieces
             }
 
             S = Pos;
-            foreach (Delta A in Attacks)
+            foreach (Delta A in attacks)
             {
                 Obstacle = BoardState.GetPiece(S + A);
                 if (Obstacle != null && Obstacle.Player != Player) Moves.Add(S + A);
